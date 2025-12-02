@@ -1,52 +1,68 @@
 import { Given, When, Then } from "@cucumber/cucumber";
 import assert from "assert";
 
-let paginaAtual = "";
 let livro = {};
-let bancoLivros = [];
-let mensagemSistema = "";
+let banco = [];
+let mensagem = "";
 
-Given("que o usuário está na página de cadastro de livros", function () {
-  paginaAtual = "cadastro";
+Given("que o usuário acessa a página de cadastro de livros", function () {
   livro = {};
-  mensagemSistema = "";
+  mensagem = "";
 });
 
-Given("preenche o título {string}", function (titulo) {
+Given("informa o título {string}", function (titulo) {
   livro.titulo = titulo;
 });
 
-Given("preenche o autor {string}", function (autor) {
+Given("deixa o campo de título vazio", function () {
+  livro.titulo = "";
+});
+
+Given("informa o autor {string}", function (autor) {
   livro.autor = autor;
 });
 
-Given("preenche o preço {string}", function (preco) {
+Given("informa o preço {string}", function (preco) {
   livro.preco = preco;
 });
 
-Given("seleciona a categoria {string}", function (categoria) {
+Given("informa a categoria {string}", function (categoria) {
   livro.categoria = categoria;
 });
 
 When("o usuário confirma o cadastro", function () {
+  validarCadastro();
+});
+
+When("o usuário tenta confirmar o cadastro", function () {
+  validarCadastro();
+});
+
+function validarCadastro() {
   if (!livro.titulo || livro.titulo.trim() === "") {
-    mensagemSistema = "Título é obrigatório";
+    mensagem = "Título é obrigatório";
     return;
   }
 
-  if (isNaN(parseFloat(livro.preco))) {
-    mensagemSistema = "Preço inválido";
+  const precoNum = Number(livro.preco);
+
+  if (isNaN(precoNum) || precoNum <= 0) {
+    mensagem = "Preço inválido";
     return;
   }
 
-  bancoLivros.push(livro);
-  mensagemSistema = "Livro cadastrado com sucesso";
+  banco.push(livro);
+  mensagem = "Livro cadastrado com sucesso!";
+}
+
+Then("o sistema deve salvar o livro", function () {
+  assert.ok(banco.includes(livro));
 });
 
-Then("o sistema deve exibir a mensagem {string}", function (mensagemEsperada) {
-  assert.strictEqual(mensagemSistema, mensagemEsperada);
+Then("não deve salvar o livro", function () {
+  assert.ok(!banco.includes(livro));
 });
 
-Then("o sistema deve salvar o livro no banco de dados", function () {
-  assert.ok(bancoLivros.includes(livro));
+Then("exibir a mensagem {string}", function (mensagemEsperada) {
+  assert.strictEqual(mensagem, mensagemEsperada);
 });

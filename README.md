@@ -1,15 +1,13 @@
-# Projeto BDD – Cadastro de Livro
+# Projeto BDD - Cadastro de Livros
 
-## Como rodar
+## Como rodar:
 
-1. Instale as dependências:
+1. Instale dependências:
 ```
 npm install
 ```
 
-2. Execute os testes:
+2. Execute:
 ```
 npm test
 ```
-
-Este projeto utiliza Cucumber.js para testes BDD.
